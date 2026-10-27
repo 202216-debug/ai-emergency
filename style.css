@@ -1,0 +1,146 @@
+body {
+  font-family: "Malgun Gothic", sans-serif;
+  background-color: #f4f6f9;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: white;
+  padding: 24px;
+  border-radius: 12px;
+}
+
+.notice {
+  background-color: #fff4e5;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.group {
+  border-left: 6px solid #c5d3ee;
+  padding: 8px 16px;
+  margin: 16px 0;
+}
+
+.part-head  { border-left-color: #b39ddb; }
+.part-chest { border-left-color: #81d4fa; }
+.part-belly { border-left-color: #ffcc80; }
+.part-limb  { border-left-color: #80cbc4; }
+.part-body  { border-left-color: #f8bbd0; }
+
+.group label {
+  display: block;
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+#check-btn, #analyze-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  background-color: #1a3a8f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#check-btn:hover, #analyze-btn:hover {
+  background-color: #0f2766;
+}
+
+.result {
+  text-align: center;
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 10px;
+}
+
+.result-red    { background-color: #fdecea; border: 2px solid #e53935; }
+.result-yellow { background-color: #fff8e1; border: 2px solid #fbc02d; }
+.result-green  { background-color: #e8f5e9; border: 2px solid #43a047; }
+
+.action-btn {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  font-size: 25px;
+  margin-top: 12px;
+  background-color: #333;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.btn-sub {
+  display: block;
+  margin-top: 6px;
+  text-align: center;
+  font-size: 10px;
+  color: #f1d6d6;
+  font-weight: normal;
+  opacity: 0.85;
+}
+.result-red .action-btn { background-color: #e53935; }
+
+#symptom-text {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  font-size: 16px;
+  font-family: inherit;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+#analyze-btn:disabled {
+  background-color: #999;
+  cursor: wait;
+}
+
+.divider {
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+  margin: 24px 0 8px;
+}
+
+.reason {
+  font-size: 13px;
+  color: #666;
+  margin-top: 12px;
+}
+
+.result-unknown { background-color: #f0f0f0; border: 2px solid #999; }
+
+.sub-guide {
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+  margin-top: 0;
+}
+
+.source {
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+  margin-top: 24px;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 0;
+  }
+
+  .container {
+    border-radius: 0;
+    min-height: 100vh;
+    padding: 20px 16px;
+  }
+}
