@@ -54,6 +54,7 @@ body {
 
 .result {
   text-align: center;
+  word-break: keep-all;
   margin-top: 20px;
   padding: 16px;
   border-radius: 10px;
@@ -138,9 +139,17 @@ body {
 }
 
 .follow-up label {
-  display: block;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  text-align: left;
   padding: 6px 0;
   cursor: pointer;
+}
+
+.follow-up input[type="checkbox"] {
+  margin-top: 4px;
+  flex-shrink: 0;
 }
 
 #follow-text {
