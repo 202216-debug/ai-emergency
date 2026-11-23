@@ -1,3 +1,9 @@
+// ===============================================
+// 증상 판정기
+// 1순위: AI 판정 (Vercel 중계 서버 → Claude)
+// 2순위: 키워드 판정 (Baseline, AI가 실패했을 때 예비용)
+// 약속: 텍스트를 받아서 { level, reason }을 돌려준다
+// ===============================================
 
 const RED_KEYWORDS = ["숨이", "호흡", "가슴", "흉통", "마비", "힘이 빠", "말이 어눌",
                       "의식", "기절", "쓰러", "경련", "발작", "피가 멈추지"];
@@ -16,17 +22,8 @@ function findKeywords(text, keywords) {
   return found;
 }
 
-// AI가 생각하는 시간을 흉내 내는 함수 (ms = 1000분의 1초)
-function wait(ms) {
-  return new Promise(function (resolve) {
-    setTimeout(resolve, ms);
-  });
-}
-
-// ★ 핵심 판정 함수 ★
-async function analyzeSymptoms(text) {
-  await wait(1000);   // 진짜 AI처럼 1초 기다리기
-
+// 예비 판정기: 키워드 규칙 (Baseline)
+async function analyzeByKeywords(text) {
   const red = findKeywords(text, RED_KEYWORDS);
   if (red.length > 0) {
     return { level: "red", reason: "위험 신호 표현 발견: " + red.join(", ") };
@@ -43,4 +40,33 @@ async function analyzeSymptoms(text) {
   }
 
   return { level: "unknown", reason: "판단할 수 있는 표현을 찾지 못했습니다." };
+}
+
+// ★ 핵심 판정 함수: AI에게 먼저 묻고, 실패하면 키워드 판정으로 ★
+async function analyzeSymptoms(text) {
+  try {
+    const response = await fetch("/api/analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: text }),
+      signal: AbortSignal.timeout(20000),   // 20초 안에 답이 없으면 포기
+    });
+
+    if (!response.ok) {
+      throw new Error("서버 응답 오류: " + response.status);
+    }
+
+    const data = await response.json();
+    return { level: data.level, reason: "AI 판정 · " + escapeHtml(data.reason) };
+  } catch (error) {
+    console.warn("AI 판정 실패 → 키워드 판정으로 전환:", error);
+    const backup = await analyzeByKeywords(text);
+    backup.reason = "키워드 판정 · " + backup.reason;
+    return backup;
+  }
+}
+
+// AI 답변에 HTML 코드가 섞여 와도 화면에서 실행되지 않게 막기
+function escapeHtml(str) {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
