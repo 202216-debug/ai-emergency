@@ -133,6 +133,44 @@ body {
   margin-top: 24px;
 }
 
+.follow-up {
+  margin-top: 12px;
+}
+
+.follow-up label {
+  display: block;
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+#follow-text {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+  font-family: inherit;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin: 8px 0;
+}
+
+#follow-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  background-color: #1a3a8f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#follow-btn:disabled {
+  background-color: #999;
+  cursor: wait;
+}
+
 @media (max-width: 600px) {
   body {
     padding: 0;

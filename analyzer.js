@@ -57,11 +57,13 @@ async function analyzeSymptoms(text) {
     }
 
     const data = await response.json();
-    return { level: data.level, reason: "AI 판정 · " + escapeHtml(data.reason) };
+    const options = (data.options || []).map(escapeHtml);
+    return { level: data.level, reason: "AI 판정 · " + escapeHtml(data.reason), options: options };
   } catch (error) {
     console.warn("AI 판정 실패 → 키워드 판정으로 전환:", error);
     const backup = await analyzeByKeywords(text);
     backup.reason = "키워드 판정 · " + backup.reason;
+    backup.options = [];
     return backup;
   }
 }

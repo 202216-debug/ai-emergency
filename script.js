@@ -1,7 +1,8 @@
 const resultBox = document.getElementById("result");
+let lastText = "";   // 마지막으로 판정한 증상 (추가 질문 때 함께 보내요)
 
-// ===== 결과 화면 보여주기 (체크리스트, 텍스트 입력이 같이 사용) =====
-function showResult(level, reason) {
+// ===== 결과 화면 보여주기 (체크리스트, 텍스트 입력, 추가 질문이 같이 사용) =====
+function showResult(level, reason, options) {
   let html = "";
 
   if (level === "red") {
@@ -23,23 +24,57 @@ function showResult(level, reason) {
       '<a class="action-btn" href="#"> 비대면 진료 연결하기' +
       '<span class="btn-sub">데모 버튼입니다.</span></a>';
   } else {
-    html =
-      "<h2> 증상을 판단하기 어려워요</h2>" +
-      "<p>아래 보기에서 해당하는 증상을 골라 주세요. 걱정된다면 119에 전화해 의료 상담을 받을 수 있어요.</p>";
+    html = "<h2> 증상을 판단하기 어려워요</h2>";
+
+    if (options && options.length > 0) {
+      // AI가 추가 질문을 보내 줬을 때: 선택지 + 자유 입력칸
+      html += "<p>정확히 판단하려면 조금 더 알려 주세요. 해당하는 것을 모두 골라 주세요.</p>";
+      html += '<div class="follow-up">';
+      options.forEach(function (option) {
+        html += '<label><input type="checkbox" class="follow-option"> ' + option + "</label>";
+      });
+      html +=
+        '<textarea id="follow-text" rows="2" placeholder="그 밖에 더 알려 줄 내용이 있으면 적어 주세요 (선택)"></textarea>' +
+        '<button id="follow-btn">다시 판정하기</button>' +
+        "</div>";
+    } else {
+      html += "<p>아래 보기에서 해당하는 증상을 골라 주세요. 걱정된다면 119에 전화해 의료 상담을 받을 수 있어요.</p>";
+    }
   }
 
   html += '<p class="reason">판정 근거: ' + reason + "</p>";
 
   resultBox.className = "result result-" + level;
   resultBox.innerHTML = html;
+
+  // 방금 그린 "다시 판정하기" 버튼에 동작 연결하기
+  const followBtn = document.getElementById("follow-btn");
+  if (followBtn) {
+    followBtn.addEventListener("click", followUp);
+  }
+
   resultBox.scrollIntoView({ behavior: "smooth" });
+}
+
+// ===== AI 판정을 실행하는 공통 함수 =====
+async function runAnalysis(text, button) {
+  const label = button.textContent;
+  button.disabled = true;
+  button.textContent = "분석 중...";
+
+  lastText = text;
+  const answer = await analyzeSymptoms(text);
+  showResult(answer.level, answer.reason, answer.options);
+
+  button.disabled = false;
+  button.textContent = label;
 }
 
 // ===== 방법 1: 직접 입력한 텍스트로 판정 =====
 const textInput = document.getElementById("symptom-text");
 const analyzeBtn = document.getElementById("analyze-btn");
 
-analyzeBtn.addEventListener("click", async function () {
+analyzeBtn.addEventListener("click", function () {
   const text = textInput.value.trim();
 
   if (text === "") {
@@ -47,21 +82,46 @@ analyzeBtn.addEventListener("click", async function () {
     return;
   }
 
-  analyzeBtn.disabled = true;
-  analyzeBtn.textContent = "분석 중...";
-
-  const answer = await analyzeSymptoms(text);
-  showResult(answer.level, answer.reason);
-
-  analyzeBtn.disabled = false;
-  analyzeBtn.textContent = "판정하기";
+  runAnalysis(text, analyzeBtn);
 });
+
+// ===== 추가 질문에 답하고 다시 판정 =====
+function followUp() {
+  const yes = [];
+  const no = [];
+
+  document.querySelectorAll(".follow-option").forEach(function (box) {
+    const optionText = box.parentElement.textContent.trim();
+    if (box.checked) {
+      yes.push(optionText);
+    } else {
+      no.push(optionText);
+    }
+  });
+
+  const extra = document.getElementById("follow-text").value.trim();
+
+  // 처음 증상 + 고른 것 + 고르지 않은 것 + 자유 입력을 합쳐서 다시 보내기
+  let combined = lastText + "\n\n[추가 확인]";
+  if (yes.length > 0) {
+    combined += "\n해당함: " + yes.join(" / ");
+  }
+  if (no.length > 0) {
+    combined += "\n해당하지 않음: " + no.join(" / ");
+  }
+  if (extra !== "") {
+    combined += "\n추가 설명: " + extra;
+  }
+
+  runAnalysis(combined, document.getElementById("follow-btn"));
+}
 
 // ===== 방법 2: 체크리스트로 판정 =====
 const checkBtn = document.getElementById("check-btn");
 
 checkBtn.addEventListener("click", function () {
-  const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+  // .group 안의 체크박스만 세기 (추가 질문 체크박스는 제외)
+  const checked = document.querySelectorAll('.group input[type="checkbox"]:checked');
 
   if (checked.length === 0) {
     alert("증상을 하나 이상 선택해 주세요.");
