@@ -82,7 +82,7 @@ analyzeBtn.addEventListener("click", function () {
     return;
   }
 
-  runAnalysis(text, analyzeBtn);
+  runAnalysis(text + getPatientInfo(), analyzeBtn);
 });
 
 // ===== 추가 질문에 답하고 다시 판정 =====
@@ -148,6 +148,29 @@ checkBtn.addEventListener("click", function () {
     showResult("green", "일반 증상만 체크했습니다.");
   }
 });
+
+// ===== 환자 정보를 글로 정리하기 =====
+function getPatientInfo() {
+  const age = document.getElementById("age-group").value;
+  const conditions = [];
+  document.querySelectorAll(".condition:checked").forEach(function (box) {
+    conditions.push(box.parentElement.textContent.trim());
+  });
+
+  // 아무것도 입력하지 않았으면 빈 글자
+  if (age === "" && conditions.length === 0) {
+    return "";
+  }
+
+  let info = "\n\n[환자 정보]";
+  if (age !== "") {
+    info += "\n연령대: " + age;
+  }
+  if (conditions.length > 0) {
+    info += "\n기저질환·상태: " + conditions.join(", ");
+  }
+  return info;
+}
 
 // ===== 큰 글씨 모드 =====
 const fontToggle = document.getElementById("font-toggle");
