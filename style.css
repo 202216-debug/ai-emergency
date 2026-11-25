@@ -180,6 +180,41 @@ body {
   cursor: wait;
 }
 
+/* ===== 큰 글씨 모드 버튼 ===== */
+.font-toggle {
+  display: block;
+  margin: 0 0 8px auto;
+  padding: 8px 14px;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: inherit;
+  color: #1a3a8f;
+  background-color: white;
+  border: 2px solid #1a3a8f;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* ===== 큰 글씨 모드가 켜졌을 때 ===== */
+body.large-text { font-size: 20px; color: #111; }
+body.large-text h1 { font-size: 34px; }
+body.large-text h2 { font-size: 26px; }
+body.large-text .font-toggle { background-color: #1a3a8f; color: white; }
+body.large-text .notice,
+body.large-text .divider,
+body.large-text .sub-guide { font-size: 18px; }
+body.large-text .reason,
+body.large-text .follow-label,
+body.large-text .follow-hint,
+body.large-text .btn-sub { font-size: 16px; }
+body.large-text #symptom-text,
+body.large-text #follow-text { font-size: 20px; }
+body.large-text #analyze-btn,
+body.large-text #check-btn,
+body.large-text #follow-btn { font-size: 22px; padding: 18px; }
+body.large-text input[type="checkbox"] { width: 24px; height: 24px; }
+body.large-text .group label { padding: 10px 0; line-height: 1.5; }
+
 @media (max-width: 600px) {
   body {
     padding: 0;

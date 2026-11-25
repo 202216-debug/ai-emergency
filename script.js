@@ -148,3 +148,30 @@ checkBtn.addEventListener("click", function () {
     showResult("green", "일반 증상만 체크했습니다.");
   }
 });
+
+// ===== 큰 글씨 모드 =====
+const fontToggle = document.getElementById("font-toggle");
+
+function applyLargeText(on) {
+  document.body.classList.toggle("large-text", on);
+  fontToggle.textContent = on ? "가 기본 글씨로" : "가 큰 글씨로";
+}
+
+// 지난번에 큰 글씨를 켰는지 브라우저 메모장에서 꺼내 보기
+let savedLarge = false;
+try {
+  savedLarge = localStorage.getItem("largeText") === "on";
+} catch (error) {
+  // 저장 기능을 쓸 수 없는 브라우저면 그냥 기본 글씨로
+}
+applyLargeText(savedLarge);
+
+fontToggle.addEventListener("click", function () {
+  const on = !document.body.classList.contains("large-text");
+  applyLargeText(on);
+  try {
+    localStorage.setItem("largeText", on ? "on" : "off");
+  } catch (error) {
+    // 저장에 실패해도 지금 화면에는 적용됨
+  }
+});
