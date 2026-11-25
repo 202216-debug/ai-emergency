@@ -215,6 +215,74 @@ body.large-text #follow-btn { font-size: 22px; padding: 18px; }
 body.large-text input[type="checkbox"] { width: 24px; height: 24px; }
 body.large-text .group label { padding: 10px 0; line-height: 1.5; }
 
+/* ===== 환자 정보 ===== */
+.patient-info {
+  margin: 16px 0;
+  padding: 12px 16px;
+  background-color: #f7f9fc;
+  border: 1px solid #d6def0;
+  border-radius: 10px;
+}
+
+.patient-info summary {
+  font-weight: bold;
+  color: #1a3a8f;
+  cursor: pointer;
+}
+
+.patient-guide {
+  font-size: 13px;
+  color: #666;
+  margin: 8px 0 4px;
+}
+
+.field-label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 12px 0 6px;
+}
+
+#age-group {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  font-family: inherit;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.condition-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.condition-list label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.condition-list label:has(input:checked) {
+  border-color: #1a3a8f;
+  background-color: #eef3ff;
+  font-weight: bold;
+}
+
+/* 큰 글씨 모드에서 환자 정보도 크게 */
+body.large-text .patient-guide { font-size: 16px; }
+body.large-text .field-label { font-size: 18px; }
+body.large-text #age-group { font-size: 20px; }
+body.large-text .condition-list label { font-size: 18px; }
+
 @media (max-width: 600px) {
   body {
     padding: 0;

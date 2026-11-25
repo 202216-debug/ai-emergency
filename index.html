@@ -13,6 +13,31 @@
    <button id="font-toggle" class="font-toggle">가 큰 글씨로</button>
     <h1>지금 응급실에 가야 할까요?</h1>
     <p class="notice">⚠️ 이 결과는 참고용입니다. 생명이 위험하다고 느껴지면 바로 <b>119</b>에 전화하세요.</p>
+    <details class="patient-info">
+      <summary>👤 환자 정보 입력하기 (선택)</summary>
+      <p class="patient-guide">알려 주시면 더 정확하게 판단할 수 있어요. 입력한 정보는 저장되지 않아요.</p>
+
+      <label class="field-label" for="age-group">나이</label>
+      <select id="age-group">
+        <option value="">선택 안 함</option>
+        <option value="1세 미만 아기">1세 미만 아기</option>
+        <option value="1~6세 어린이">1~6세 어린이</option>
+        <option value="7~18세 어린이·청소년">7~18세 어린이·청소년</option>
+        <option value="19~64세 성인">19~64세 성인</option>
+        <option value="65세 이상">65세 이상</option>
+      </select>
+
+      <p class="field-label">앓고 있는 병이나 상태 (해당하는 것 모두)</p>
+      <div class="condition-list">
+        <label><input type="checkbox" class="condition"> 심장질환</label>
+        <label><input type="checkbox" class="condition"> 고혈압</label>
+        <label><input type="checkbox" class="condition"> 당뇨</label>
+        <label><input type="checkbox" class="condition"> 뇌졸중을 겪은 적 있음</label>
+        <label><input type="checkbox" class="condition"> 천식·폐질환</label>
+        <label><input type="checkbox" class="condition"> 피를 묽게 하는 약 복용</label>
+        <label><input type="checkbox" class="condition"> 임신 중</label>
+      </div>
+    </details>
 
     <section class="text-input">
     <h2> 증상을 직접 적어 주세요</h2>
