@@ -48,7 +48,8 @@ async function analyzeByKeywords(text) {
 }
 
 // ★ 핵심 판정 함수: AI에게 먼저 묻고, 실패하면 키워드 판정으로 ★
-async function analyzeSymptoms(text) {
+// backupResult: AI가 실패했을 때 쓸 예비 결과 (없으면 키워드 판정)
+async function analyzeSymptoms(text, backupResult) {
   try {
     const response = await fetch("/api/analyze", {
       method: "POST",
@@ -65,6 +66,10 @@ async function analyzeSymptoms(text) {
     const options = (data.options || []).map(escapeHtml);
     return { level: data.level, reason: "AI 판정 · " + escapeHtml(data.reason), options: options };
   } catch (error) {
+    if (backupResult) {
+      console.warn("AI 판정 실패 → 선택 항목 규칙 판정으로 전환:", error);
+      return { level: backupResult.level, reason: "규칙 판정 · " + backupResult.reason, options: [] };
+    }
     console.warn("AI 판정 실패 → 키워드 판정으로 전환:", error);
     const backup = await analyzeByKeywords(text);
     backup.reason = "키워드 판정 · " + backup.reason;

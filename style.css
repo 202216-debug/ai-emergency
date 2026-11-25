@@ -448,14 +448,56 @@ html.large-text .font-toggle {
   color: var(--gray-400);
 }
 
-/* 고른 단계: 통증이 셀수록 진한 색 */
+/* 통증이 셀수록 진한 색: 평소에는 옅게, 고르면 진하게 */
+.pain-0 { color: #4e5968; background-color: #f2f4f6; border-color: #e0e4e9; }
+.pain-1 { color: #1e6b30; background-color: #eef8f0; border-color: #cbe7d1; }
+.pain-2 { color: #8a5a00; background-color: #fff6e0; border-color: #f3dca0; }
+.pain-3 { color: #b4470f; background-color: #fdece2; border-color: #f6c7ab; }
+.pain-4 { color: #b42318; background-color: #fde7e5; border-color: #f4b8b2; }
+.pain-btn span { color: inherit; opacity: 0.75; }
+
 .pain-btn.is-active { color: white; border-color: transparent; }
-.pain-btn.is-active span { color: rgba(255, 255, 255, 0.85); }
-.pain-btn.is-active[data-pain^="없음"]   { background-color: #6b7684; }
-.pain-btn.is-active[data-pain^="약함"]   { background-color: #2e8540; }
-.pain-btn.is-active[data-pain^="중간"]   { background-color: #c98500; }
-.pain-btn.is-active[data-pain^="심함"]   { background-color: #e0641a; }
-.pain-btn.is-active[data-pain^="극심함"] { background-color: var(--red); }
+.pain-btn.is-active span { color: white; opacity: 0.9; }
+.pain-0.is-active { background-color: #6b7684; }
+.pain-1.is-active { background-color: #2e8540; }
+.pain-2.is-active { background-color: #c98500; }
+.pain-3.is-active { background-color: #e0641a; }
+.pain-4.is-active { background-color: var(--red); }
+
+/* ===== 부위별 선택: 세부 상태 추가 질문 ===== */
+.detail {
+  margin: 0 0 0.5rem 2rem;
+  padding: 0.75rem 0.875rem;
+  background-color: var(--navy-tint);
+  border-radius: 0.625rem;
+  animation: result-in 0.25s ease-out;
+}
+
+.detail-q {
+  margin: 0 0 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.group .detail label {
+  gap: 0.6rem;
+  padding: 0.55rem 0;
+  font-size: 0.875rem;
+  border-bottom: 1px solid #d9e2f5;
+}
+
+.group .detail label:last-child { border-bottom: none; }
+
+.detail input[type="radio"] {
+  flex-shrink: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0.15rem 0 0;
+  accent-color: var(--navy);
+}
+
+.detail.need-answer { outline: 2px solid var(--red); }
 
 /* ===== 판정 결과 ===== */
 .result {

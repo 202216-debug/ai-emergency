@@ -36,7 +36,7 @@
 
     <p class="notice">
       <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 9v4M12 16h.01M10.36 3.59 2.26 17.13A1.9 1.9 0 0 0 3.9 20h16.2a1.9 1.9 0 0 0 1.64-2.87L13.64 3.59a1.9 1.9 0 0 0-3.28 0Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>판정 결과는 참고용입니다. 생명이 위급한 경우 즉시 119에 신고하십시오.</span>
+      <span>판정 결과는 참고용입니다. 판단이 어렵거나 불안하면 망설이지 말고 119에 전화하십시오. 119에서 의료 상담도 받을 수 있습니다.</span>
     </p>
 
     <main class="content">
@@ -89,7 +89,9 @@
           <p class="example">예시) 30분 전부터 가슴이 답답하고 식은땀이 남</p>
         </div>
 
-        <!-- 방식 2: 부위별 선택 -->
+        <!-- 방식 2: 부위별 선택
+             value="red|yellow|green" : 고르면 바로 그 등급
+             value="detail"           : 고르면 세부 상태를 한 번 더 묻고, 고른 세부 상태의 등급을 사용 -->
         <div class="mode-panel" id="panel-list" hidden>
           <p class="mode-guide">해당 증상을 목록에서 모두 선택 (여러 부위 선택 가능)</p>
 
@@ -103,49 +105,89 @@
 
           <div class="group" data-part="head">
             <label><input type="checkbox" value="red"><span>갑작스러운 한쪽 얼굴·팔다리 마비 또는 말 어눌함</span></label>
-            <label><input type="checkbox" value="red"><span>머리를 부딪힌 후 구토 또는 의식 흐림</span></label>
-            <label><input type="checkbox" value="yellow"><span>갑작스러운 시력 저하</span></label>
-            <label><input type="checkbox" value="yellow"><span>눈에 세제·락스 등 화학물질이 들어감</span></label>
-            <label><input type="checkbox" value="green"><span>평소와 비슷한 가벼운 두통</span></label>
+            <label><input type="checkbox" value="detail"><span>두통</span></label>
+            <div class="detail" hidden>
+              <p class="detail-q">두통의 상태 (하나 선택)</p>
+              <label><input type="radio" name="d-headache" value="green"><span>평소와 비슷한 가벼운 두통</span></label>
+              <label><input type="radio" name="d-headache" value="red"><span>갑자기 시작된 극심한 두통</span></label>
+              <label><input type="radio" name="d-headache" value="red"><span>발열과 함께 목이 뻣뻣함</span></label>
+            </div>
+            <label><input type="checkbox" value="detail"><span>머리를 부딪힘</span></label>
+            <div class="detail" hidden>
+              <p class="detail-q">부딪힌 뒤 상태 (하나 선택)</p>
+              <label><input type="radio" name="d-headhit" value="green"><span>혹이나 통증만 있음</span></label>
+              <label><input type="radio" name="d-headhit" value="yellow"><span>두통이 점점 심해짐</span></label>
+              <label><input type="radio" name="d-headhit" value="red"><span>구토 또는 의식 흐림</span></label>
+            </div>
+            <label><input type="checkbox" value="detail"><span>눈 이상</span></label>
+            <div class="detail" hidden>
+              <p class="detail-q">눈의 상태 (하나 선택)</p>
+              <label><input type="radio" name="d-eye" value="green"><span>가벼운 충혈 또는 가려움</span></label>
+              <label><input type="radio" name="d-eye" value="yellow"><span>세제·락스 등 화학물질이 들어감</span></label>
+              <label><input type="radio" name="d-eye" value="yellow"><span>갑작스러운 시력 저하</span></label>
+            </div>
           </div>
 
           <div class="group" data-part="chest" hidden>
             <label><input type="checkbox" value="red"><span>숨이 차서 말을 잇기 어려움</span></label>
-            <label><input type="checkbox" value="red"><span>음식·약 섭취 후 입술·얼굴 부기와 호흡곤란</span></label>
-            <label><input type="checkbox" value="green"><span>콧물·기침·인후통 등 감기 증상</span></label>
             <label><input type="checkbox" value="red"><span>가슴을 쥐어짜거나 짓누르는 듯한 통증</span></label>
+            <label><input type="checkbox" value="red"><span>음식·약 섭취 후 입술·얼굴 부기와 호흡곤란</span></label>
             <label><input type="checkbox" value="yellow"><span>안정 시에도 갑자기 빠르거나 불규칙한 심장 박동</span></label>
+            <label><input type="checkbox" value="green"><span>콧물·기침·인후통 등 감기 증상</span></label>
           </div>
 
           <div class="group" data-part="belly" hidden>
-            <label><input type="checkbox" value="yellow"><span>몸을 펴거나 움직이기 어려울 정도의 복통</span></label>
-            <label><input type="checkbox" value="green"><span>가벼운 배탈·설사 (물 섭취 가능)</span></label>
-            <label><input type="checkbox" value="yellow"><span>피를 토함 또는 피 섞인 변·검은 변</span></label>
-            <label><input type="checkbox" value="yellow"><span>계속되는 구토·설사로 물을 못 마시고 소변이 거의 없음</span></label>
+            <label><input type="checkbox" value="detail"><span>복통</span></label>
+            <div class="detail" hidden>
+              <p class="detail-q">복통의 상태 (하나 선택)</p>
+              <label><input type="radio" name="d-belly" value="green"><span>가벼운 배탈 또는 더부룩함</span></label>
+              <label><input type="radio" name="d-belly" value="yellow"><span>몸을 펴거나 움직이기 어려울 정도</span></label>
+              <label><input type="radio" name="d-belly" value="yellow"><span>임신 중 복통 또는 출혈</span></label>
+            </div>
+            <label><input type="checkbox" value="detail"><span>구토 · 설사</span></label>
+            <div class="detail" hidden>
+              <p class="detail-q">구토 · 설사의 상태 (하나 선택)</p>
+              <label><input type="radio" name="d-vomit" value="green"><span>가벼움, 물은 마실 수 있음</span></label>
+              <label><input type="radio" name="d-vomit" value="yellow"><span>계속되어 물을 못 마시고 소변이 거의 없음</span></label>
+              <label><input type="radio" name="d-vomit" value="yellow"><span>피를 토함 또는 피 섞인 변·검은 변</span></label>
+            </div>
           </div>
 
           <div class="group" data-part="limb" hidden>
-            <p class="group-sub">다침</p>
-            <label><input type="checkbox" value="green"><span>가벼운 베임 또는 멍</span></label>
-            <label><input type="checkbox" value="green"><span>삔 것 같은 붓기와 통증 (걸을 수 있음)</span></label>
-            <label><input type="checkbox" value="yellow"><span>심하게 붓고 움직이거나 체중을 싣기 어려움</span></label>
-            <label><input type="checkbox" value="yellow"><span>뼈가 튀어나온 골절 또는 깊이 찔린 상처</span></label>
             <label><input type="checkbox" value="red"><span>눌러도 멈추지 않는 출혈</span></label>
-            <p class="group-sub">화상</p>
-            <label><input type="checkbox" value="green"><span>피부가 붉고 따가운 작은 화상 (1도)</span></label>
-            <label><input type="checkbox" value="yellow"><span>물집이 생긴 화상 (2도)</span></label>
-            <label><input type="checkbox" value="yellow"><span>피부가 하얗거나 검게 변하고 감각이 둔한 화상 (3도)</span></label>
-            <label><input type="checkbox" value="yellow"><span>손·발·생식기 화상 또는 다리 한쪽 정도로 넓은 화상</span></label>
-            <label><input type="checkbox" value="red"><span>얼굴·목 화상 또는 연기를 마신 뒤 숨쉬기 불편함</span></label>
+            <label><input type="checkbox" value="detail"><span>팔다리를 다침</span></label>
+            <div class="detail" hidden>
+              <p class="detail-q">다친 상태 (하나 선택)</p>
+              <label><input type="radio" name="d-injury" value="green"><span>가벼운 베임 또는 멍</span></label>
+              <label><input type="radio" name="d-injury" value="green"><span>삔 것 같은 붓기, 걸을 수 있음</span></label>
+              <label><input type="radio" name="d-injury" value="yellow"><span>심하게 붓고 체중을 싣기 어려움</span></label>
+              <label><input type="radio" name="d-injury" value="yellow"><span>뼈가 튀어나오거나 모양이 비뚤어짐</span></label>
+              <label><input type="radio" name="d-injury" value="yellow"><span>깊이 찔리거나 벌어진 상처</span></label>
+            </div>
+            <label><input type="checkbox" value="detail"><span>화상</span></label>
+            <div class="detail" hidden>
+              <p class="detail-q">화상의 상태 (하나 선택)</p>
+              <label><input type="radio" name="d-burn" value="green"><span>붉고 따가운 작은 화상 (1도)</span></label>
+              <label><input type="radio" name="d-burn" value="yellow"><span>물집이 생김 (2도)</span></label>
+              <label><input type="radio" name="d-burn" value="yellow"><span>피부가 하얗거나 검게 변하고 감각이 둔함 (3도)</span></label>
+              <label><input type="radio" name="d-burn" value="yellow"><span>손·발·생식기 또는 손바닥보다 넓은 범위</span></label>
+              <label><input type="radio" name="d-burn" value="red"><span>얼굴·목 화상 또는 연기를 마신 뒤 숨쉬기 불편함</span></label>
+            </div>
           </div>
 
           <div class="group" data-part="body" hidden>
             <label><input type="checkbox" value="red"><span>의식을 잃음 또는 불러도 반응이 둔함</span></label>
             <label><input type="checkbox" value="red"><span>몸이 뻣뻣해지며 떨리는 경련(발작)</span></label>
-            <label><input type="checkbox" value="green"><span>발열이 있으나 물 섭취와 평소 활동 가능</span></label>
             <label><input type="checkbox" value="red"><span>식은땀·창백함과 함께 쓰러질 것 같은 느낌</span></label>
             <label><input type="checkbox" value="red"><span>약·술·농약 등을 한꺼번에 많이 섭취</span></label>
             <label><input type="checkbox" value="red"><span>자신이나 타인을 해칠 것 같은 생각</span></label>
+            <label><input type="checkbox" value="detail"><span>발열</span></label>
+            <div class="detail" hidden>
+              <p class="detail-q">발열의 상태 (하나 선택)</p>
+              <label><input type="radio" name="d-fever" value="green"><span>물 섭취와 평소 활동 가능</span></label>
+              <label><input type="radio" name="d-fever" value="yellow"><span>39도 이상 고열이 계속됨</span></label>
+              <label><input type="radio" name="d-fever" value="red"><span>발열과 함께 처지고 반응이 둔함</span></label>
+            </div>
           </div>
         </div>
 
@@ -153,11 +195,11 @@
         <div class="pain">
           <p class="pain-title">통증 정도 <span class="step-optional">(선택)</span></p>
           <div class="pain-scale" role="radiogroup" aria-label="통증 정도">
-            <button type="button" class="pain-btn" data-pain="없음 (0/10)" role="radio" aria-checked="false">없음<span>0</span></button>
-            <button type="button" class="pain-btn" data-pain="약함 (1~3/10)" role="radio" aria-checked="false">약함<span>1~3</span></button>
-            <button type="button" class="pain-btn" data-pain="중간 (4~6/10)" role="radio" aria-checked="false">중간<span>4~6</span></button>
-            <button type="button" class="pain-btn" data-pain="심함 (7~8/10)" role="radio" aria-checked="false">심함<span>7~8</span></button>
-            <button type="button" class="pain-btn" data-pain="극심함 (9~10/10)" data-severe="true" role="radio" aria-checked="false">극심함<span>9~10</span></button>
+            <button type="button" class="pain-btn pain-0" data-pain="없음 (0/10)" role="radio" aria-checked="false">없음<span>0</span></button>
+            <button type="button" class="pain-btn pain-1" data-pain="약함 (1~3/10)" role="radio" aria-checked="false">약함<span>1~3</span></button>
+            <button type="button" class="pain-btn pain-2" data-pain="중간 (4~6/10)" role="radio" aria-checked="false">중간<span>4~6</span></button>
+            <button type="button" class="pain-btn pain-3" data-pain="심함 (7~8/10)" role="radio" aria-checked="false">심함<span>7~8</span></button>
+            <button type="button" class="pain-btn pain-4" data-pain="극심함 (9~10/10)" role="radio" aria-checked="false">극심함<span>9~10</span></button>
           </div>
         </div>
       </section>

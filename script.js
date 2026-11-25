@@ -76,14 +76,15 @@ function showResult(level, reason, options) {
 }
 
 // ===== AI 판정을 실행하는 공통 함수 =====
-async function runAnalysis(text, button) {
+// backup: AI가 실패했을 때 쓸 예비 결과 (없으면 키워드 판정)
+async function runAnalysis(text, button, backup) {
   const label = button.textContent;
   button.disabled = true;
   button.textContent = "분석 중...";
   judgeBtn.disabled = true;
 
   lastText = text;
-  const answer = await analyzeSymptoms(text);
+  const answer = await analyzeSymptoms(text, backup);
   showResult(answer.level, answer.reason, answer.options);
 
   button.disabled = false;
@@ -110,15 +111,18 @@ document.querySelectorAll(".mode-btn").forEach(function (btn) {
 });
 
 // ===== 부위 탭 전환 =====
+function showPart(part) {
+  document.querySelectorAll(".part-tab").forEach(function (t) {
+    t.classList.toggle("is-active", t.dataset.part === part);
+  });
+  document.querySelectorAll(".group").forEach(function (group) {
+    group.hidden = group.dataset.part !== part;
+  });
+}
+
 document.querySelectorAll(".part-tab").forEach(function (tab) {
   tab.addEventListener("click", function () {
-    const part = tab.dataset.part;
-    document.querySelectorAll(".part-tab").forEach(function (t) {
-      t.classList.toggle("is-active", t === tab);
-    });
-    document.querySelectorAll(".group").forEach(function (group) {
-      group.hidden = group.dataset.part !== part;
-    });
+    showPart(tab.dataset.part);
   });
 });
 
@@ -153,7 +157,8 @@ function judgeByText() {
   runAnalysis(text + getPainInfo() + getPatientInfo(), judgeBtn);
 }
 
-// 방식 2: 부위별 선택 목록으로 규칙 판정
+// 방식 2: 부위별 선택 목록으로 판정
+// 위험 신호를 고르면 기다리지 않고 바로 119, 그 밖에는 고른 항목·통증·환자 정보를 AI가 종합
 function judgeByList() {
   // .group 안의 체크박스만 세기 (추가 질문 체크박스는 제외)
   const checked = document.querySelectorAll('.group input[type="checkbox"]:checked');
@@ -163,31 +168,71 @@ function judgeByList() {
     return;
   }
 
-  let hasRed = false;
-  let hasYellow = false;
+  const items = [];
+  let level = "green";
 
-  checked.forEach(function (box) {
-    if (box.value === "red") {
-      hasRed = true;
+  for (const box of checked) {
+    const label = box.parentElement;
+    let name = label.textContent.trim();
+    let itemLevel = box.value;
+
+    // 세부 상태를 묻는 항목이면, 고른 세부 상태로 등급 정하기
+    if (box.value === "detail") {
+      const detail = label.nextElementSibling;
+      const answer = detail.querySelector('input[type="radio"]:checked');
+      if (answer === null) {
+        alert("‘" + name + "’의 상태를 선택하십시오.");
+        showPart(label.closest(".group").dataset.part);
+        detail.classList.add("need-answer");
+        detail.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+      name += ": " + answer.parentElement.textContent.trim();
+      itemLevel = answer.value;
     }
-    if (box.value === "yellow") {
-      hasYellow = true;
+
+    items.push(name);
+    if (itemLevel === "red") {
+      level = "red";
+    } else if (itemLevel === "yellow" && level !== "red") {
+      level = "yellow";
+    }
+  }
+
+  // 위험 신호는 AI를 기다리지 않고 바로 안내
+  if (level === "red") {
+    showResult("red", "선택 항목 중 위험 신호 있음");
+    return;
+  }
+
+  // 규칙 판정 결과는 AI가 실패했을 때의 예비 결과로 사용
+  const backup = {
+    level: level,
+    reason: level === "yellow" ? "선택 항목 중 주의 증상 있음" : "일반 증상만 선택함",
+  };
+  const text = "[부위별 선택 항목]\n- " + items.join("\n- ") + getPainInfo() + getPatientInfo();
+  runAnalysis(text, judgeBtn, backup);
+}
+
+// 체크하면 세부 상태 질문 펼치기, 해제하면 접고 답 지우기
+document.querySelectorAll('.group input[value="detail"]').forEach(function (box) {
+  box.addEventListener("change", function () {
+    const detail = box.parentElement.nextElementSibling;
+    detail.hidden = !box.checked;
+    detail.classList.remove("need-answer");
+    if (!box.checked) {
+      detail.querySelectorAll('input[type="radio"]').forEach(function (r) {
+        r.checked = false;
+      });
     }
   });
+});
 
-  // 통증이 극심하면 일반 증상만 골랐어도 응급실 진료로 한 단계 올리기
-  const severePain = selectedPain !== null && selectedPain.dataset.severe === "true";
-
-  if (hasRed) {
-    showResult("red", "선택한 항목 중 위험 신호 있음");
-  } else if (hasYellow) {
-    showResult("yellow", "선택한 항목 중 주의 증상 있음");
-  } else if (severePain) {
-    showResult("yellow", "일반 증상이나 극심한 통증 동반");
-  } else {
-    showResult("green", "일반 증상만 선택함");
-  }
-}
+document.querySelectorAll(".detail").forEach(function (detail) {
+  detail.addEventListener("change", function () {
+    detail.classList.remove("need-answer");
+  });
+});
 
 // ===== 통증 정도 선택 (한 번 더 누르면 선택 취소) =====
 let selectedPain = null;
