@@ -24,7 +24,7 @@ const SYSTEM_PROMPT = `당신은 응급 증상 분류를 돕는 보조 도구입
 5. 입력에 [환자 정보]가 있으면 위험 요인으로 함께 고려하세요.
    예: 1세 미만 아기의 발열, 65세 이상이나 당뇨 환자의 가슴 답답함(통증이 약해도 심근경색일 수 있음),
    피를 묽게 하는 약을 먹는 사람의 머리 외상, 임신 중 복통이나 출혈은 더 높은 등급을 고려하세요.
-   환자 정보가 판단에 영향을 주었다면 reason에 그 내용을 언급하세요.
+   환자 정보가 판단에 영향을 주었다면 reason에 짧게 포함하세요.
 
 level이 unknown일 때는, 판단에 꼭 필요한 추가 정보를 사용자가 고를 수 있도록 options에 선택지를 3~5개 넣으세요.
 - 각 선택지는 사용자가 해당 여부를 고를 수 있는 짧은 증상 항목으로 쓰세요.
@@ -33,11 +33,16 @@ level이 unknown일 때는, 판단에 꼭 필요한 추가 정보를 사용자�
 - 문체는 공공 안내문처럼 간결한 개조식(~함, ~음, 명사형)으로 쓰세요. 구어체("~해요", "~요")는 쓰지 마세요.
 - 의료 지식이 없는 사람도 이해할 수 있는 일상 단어를 쓰고, 어려운 의학 용어는 피하세요.
 - 각 선택지는 20자 안팎으로 짧게 쓰세요. (좋은 예: "갑작스러운 극심한 두통", "발열과 함께 목이 뻣뻣함", "한쪽 팔다리 힘 빠짐")
-- reason도 같은 문체로 간결하게 쓰세요. (예: "두통만으로는 원인 판단이 어려워 위험 신호 확인 필요")
 - level이 unknown이 아니면 options는 빈 배열 []로 두세요.
 
+reason 작성 규칙 (당황한 사람도 한눈에 이해할 수 있게):
+- 25자 이내로, 가장 중요한 근거 하나만 쓰세요. 여러 근거를 나열하지 마세요.
+- "증상: 이유" 형식의 개조식으로 쓰세요. 쉬운 단어를 쓰고, 꼭 필요한 병명만 "~ 가능성"으로 덧붙이세요.
+- 좋은 예: "가슴 통증과 식은땀: 심장 질환 가능성", "한쪽 팔다리 마비: 뇌졸중 가능성", "열 없는 가벼운 감기 증상", "두통 원인 확인 필요"
+- 환자 정보가 판단에 영향을 주었다면 짧게 포함하세요. (예: "65세·당뇨 환자의 가슴 답답함")
+
 반드시 아래 형식의 JSON 한 개만 답하세요. 다른 말은 쓰지 마세요.
-{"level": "red | yellow | green | unknown 중 하나", "reason": "판단 근거를 한국어 한 문장으로", "options": ["선택지1", "선택지2"]}`;
+{"level": "red | yellow | green | unknown 중 하나", "reason": "핵심 근거 하나를 25자 이내로", "options": ["선택지1", "선택지2"]}`;
 
 const LEVELS = ["red", "yellow", "green", "unknown"];
 
@@ -90,7 +95,7 @@ export default async function handler(req, res) {
       ? answer.options.filter((o) => typeof o === "string").slice(0, 5).map((o) => o.slice(0, 80))
       : [];
 
-    res.status(200).json({ level: answer.level, reason: answer.reason.slice(0, 150), options: options });
+    res.status(200).json({ level: answer.level, reason: answer.reason.slice(0, 60), options: options });
   } catch (error) {
     console.error("AI 판정 오류:", error);
     res.status(502).json({ error: "AI 판정 중 오류가 발생했습니다." });
