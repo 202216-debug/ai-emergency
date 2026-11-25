@@ -24,6 +24,11 @@ function findKeywords(text, keywords) {
 
 // 예비 판정기: 키워드 규칙 (Baseline)
 async function analyzeByKeywords(text) {
+    // "해당하지 않음" 줄은 '없는 증상'이므로 키워드 검사에서 빼기
+  text = text.split("\n").filter(function (line) {
+    return !line.startsWith("해당하지 않음");
+  }).join("\n");
+
   const red = findKeywords(text, RED_KEYWORDS);
   if (red.length > 0) {
     return { level: "red", reason: "위험 신호 표현 발견: " + red.join(", ") };
@@ -44,14 +49,6 @@ async function analyzeByKeywords(text) {
 
 // ★ 핵심 판정 함수: AI에게 먼저 묻고, 실패하면 키워드 판정으로 ★
 async function analyzeSymptoms(text) {
-  async function analyzeByKeywords(text) {
-  // "해당하지 않음" 줄은 '없는 증상'이므로 키워드 검사에서 빼기
-  text = text.split("\n").filter(function (line) {
-    return !line.startsWith("해당하지 않음");
-  }).join("\n");
-
-  const red = findKeywords(text, RED_KEYWORDS);
-  ...
   try {
     const response = await fetch("/api/analyze", {
       method: "POST",
