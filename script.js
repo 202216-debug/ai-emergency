@@ -1,46 +1,57 @@
 const resultBox = document.getElementById("result");
-let lastText = "";   // 마지막으로 판정한 증상 (추가 질문 때 함께 보내요)
+const judgeBtn = document.getElementById("judge-btn");
+const textInput = document.getElementById("symptom-text");
+let lastText = "";     // 마지막으로 판정한 증상 (추가 질문 때 함께 보내요)
+let mode = "text";     // 지금 선택된 입력 방식: "text"(직접 입력) 또는 "list"(부위별 선택)
 
-// ===== 결과 화면 보여주기 (체크리스트, 텍스트 입력, 추가 질문이 같이 사용) =====
+// ===== 결과 화면 보여주기 (직접 입력, 부위별 선택, 추가 질문이 같이 사용) =====
 function showResult(level, reason, options) {
   let html = "";
 
   if (level === "red") {
     html =
-      "<h2>🚨 지금 바로 119에 연락하세요</h2>" +
-      "<p>생명이 위험할 수 있는 증상입니다. 직접 운전해서 이동하지 마세요.</p>" +
-      '<a class="action-btn" href="tel:119"> 119 전화 걸기' +
-      '<span class="btn-sub">누르면 119 전화 앱으로 연결됩니다.</span></a>';
+      '<p class="result-badge">위험</p>' +
+      "<h3>즉시 119 신고 필요</h3>" +
+      '<p class="result-desc">생명이 위험할 수 있는 증상입니다. 직접 운전하여 이동하지 마십시오.</p>' +
+      '<a class="action-btn" href="tel:119">119 전화 연결' +
+      '<span class="btn-sub">누르면 전화 앱으로 연결됩니다</span></a>';
   } else if (level === "yellow") {
     html =
-      "<h2>⚠️ 응급실 방문을 권장합니다</h2>" +
-      "<p>빠른 진료가 필요할 수 있습니다. 가까운 응급실을 확인하세요.</p>" +
-      '<a class="action-btn" href="https://www.e-gen.or.kr/egen/search_emergency_room.do" target="_blank"> 가까운 응급실 찾기' +
-      '<span class="btn-sub">중앙응급의료센터 사이트가 새 창으로 열립니다. "내 현위치로 이동"을 누르면 가까운 응급실이 떠요.</span></a>';
-    } else if (level === "green") {
+      '<p class="result-badge">주의</p>' +
+      "<h3>응급실 진료 권장</h3>" +
+      '<p class="result-desc">신속한 진료가 필요할 수 있습니다. 가까운 응급실을 확인하십시오.</p>' +
+      '<a class="action-btn" href="https://www.e-gen.or.kr/egen/search_emergency_room.do" target="_blank">가까운 응급실 찾기' +
+      '<span class="btn-sub">중앙응급의료센터(E-Gen) · "내 현위치로 이동"을 누르면 주변 응급실 표시</span></a>';
+  } else if (level === "green") {
     html =
-      "<h2> 응급실보다는 일반 진료를 권장합니다</h2>" +
-      "<p>지금 문을 연 동네 병원이나 비대면 진료로 충분해 보입니다. 증상이 심해지면 다시 판정하거나 119에 전화하세요.</p>" +
-      '<a class="action-btn" href="https://www.e-gen.or.kr/egen/search_hospital.do" target="_blank"> 지금 문 연 병원 찾기' +
-      '<span class="btn-sub">중앙응급의료센터 사이트가 새 창으로 열립니다.</span></a>' +
-      '<a class="action-btn action-btn-sub" href="https://www.e-gen.or.kr/egen/search_pharmacy.do" target="_blank"> 문 연 약국 찾기</a>';
+      '<p class="result-badge">일반</p>' +
+      "<h3>일반 진료 권장</h3>" +
+      '<p class="result-desc">응급실보다 동네 병원 진료 또는 비대면 진료가 적합해 보입니다. 증상이 악화되면 다시 판정하거나 119에 신고하십시오.</p>' +
+      '<a class="action-btn" href="https://www.e-gen.or.kr/egen/search_hospital.do" target="_blank">진료 중인 병원 찾기' +
+      '<span class="btn-sub">중앙응급의료센터(E-Gen) 사이트가 새 창으로 열립니다</span></a>' +
+      '<a class="action-btn action-btn-sub" href="https://www.e-gen.or.kr/egen/search_pharmacy.do" target="_blank">문 연 약국 찾기</a>';
+  } else if (options && options.length > 0) {
+    // AI가 추가 질문을 보내 줬을 때: 확인 항목 + 자유 입력칸
+    html =
+      '<p class="result-badge">확인 필요</p>' +
+      "<h3>추가 정보 필요</h3>" +
+      '<p class="result-desc">현재 정보만으로는 판단이 어렵습니다. 해당하는 항목을 모두 선택하십시오.</p>' +
+      '<div class="follow-up">' +
+      '<p class="follow-label">확인 항목</p>';
+    options.forEach(function (option) {
+      html += '<label><input type="checkbox" class="follow-option"><span>' + option + "</span></label>";
+    });
+    html +=
+      '<textarea id="follow-text" rows="2" placeholder="기타 증상 입력 (선택)"></textarea>' +
+      '<button id="follow-btn" type="button">다시 판정</button>' +
+      '<p class="follow-hint">해당 항목이 없으면 그대로 누르십시오</p>' +
+      "</div>";
   } else {
-    html = "<h2> 증상을 판단하기 어려워요</h2>";
-
-    if (options && options.length > 0) {
-      // AI가 추가 질문을 보내 줬을 때: 선택지 + 자유 입력칸
-      html += "<p>정확히 판단하려면 조금 더 알려 주세요. 해당하는 것을 모두 골라 주세요.</p>";
-      html += '<div class="follow-up">';
-      options.forEach(function (option) {
-        html += '<label><input type="checkbox" class="follow-option"> ' + option + "</label>";
-      });
-      html +=
-        '<textarea id="follow-text" rows="2" placeholder="그 밖에 더 알려 줄 내용이 있으면 적어 주세요 (선택)"></textarea>' +
-        '<button id="follow-btn">다시 판정하기</button>' +
-        "</div>";
-    } else {
-      html += "<p>아래 보기에서 해당하는 증상을 골라 주세요. 걱정된다면 119에 전화해 의료 상담을 받을 수 있어요.</p>";
-    }
+    html =
+      '<p class="result-badge">확인 필요</p>' +
+      "<h3>판단 불가</h3>" +
+      '<p class="result-desc">부위별 선택에서 해당 증상을 선택하십시오. 걱정되는 경우 119에 전화하면 의료 상담을 받을 수 있습니다.</p>' +
+      '<button class="link-btn" id="goto-list" type="button">부위별 선택으로 이동</button>';
   }
 
   html += '<p class="reason">판정 근거: ' + reason + "</p>";
@@ -48,13 +59,20 @@ function showResult(level, reason, options) {
   resultBox.className = "result result-" + level;
   resultBox.innerHTML = html;
 
-  // 방금 그린 "다시 판정하기" 버튼에 동작 연결하기
+  // 방금 그린 버튼들에 동작 연결하기
   const followBtn = document.getElementById("follow-btn");
   if (followBtn) {
     followBtn.addEventListener("click", followUp);
   }
+  const gotoList = document.getElementById("goto-list");
+  if (gotoList) {
+    gotoList.addEventListener("click", function () {
+      setMode("list");
+      document.getElementById("panel-list").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
 
-  resultBox.scrollIntoView({ behavior: "smooth" });
+  resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 // ===== AI 판정을 실행하는 공통 함수 =====
@@ -62,6 +80,7 @@ async function runAnalysis(text, button) {
   const label = button.textContent;
   button.disabled = true;
   button.textContent = "분석 중...";
+  judgeBtn.disabled = true;
 
   lastText = text;
   const answer = await analyzeSymptoms(text);
@@ -69,22 +88,101 @@ async function runAnalysis(text, button) {
 
   button.disabled = false;
   button.textContent = label;
+  judgeBtn.disabled = false;
 }
 
-// ===== 방법 1: 직접 입력한 텍스트로 판정 =====
-const textInput = document.getElementById("symptom-text");
-const analyzeBtn = document.getElementById("analyze-btn");
+// ===== 입력 방식 전환 (직접 입력 / 부위별 선택) =====
+function setMode(newMode) {
+  mode = newMode;
+  document.querySelectorAll(".mode-btn").forEach(function (btn) {
+    const active = btn.dataset.mode === newMode;
+    btn.classList.toggle("is-active", active);
+    btn.setAttribute("aria-selected", active ? "true" : "false");
+  });
+  document.getElementById("panel-text").hidden = newMode !== "text";
+  document.getElementById("panel-list").hidden = newMode !== "list";
+}
 
-analyzeBtn.addEventListener("click", function () {
+document.querySelectorAll(".mode-btn").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    setMode(btn.dataset.mode);
+  });
+});
+
+// ===== 부위 탭 전환 =====
+document.querySelectorAll(".part-tab").forEach(function (tab) {
+  tab.addEventListener("click", function () {
+    const part = tab.dataset.part;
+    document.querySelectorAll(".part-tab").forEach(function (t) {
+      t.classList.toggle("is-active", t === tab);
+    });
+    document.querySelectorAll(".group").forEach(function (group) {
+      group.hidden = group.dataset.part !== part;
+    });
+  });
+});
+
+// 부위마다 고른 개수를 탭에 표시 (다른 부위에서 고른 것도 잊지 않게)
+document.querySelectorAll(".group").forEach(function (group) {
+  group.addEventListener("change", function () {
+    const count = group.querySelectorAll('input[type="checkbox"]:checked').length;
+    const tab = document.querySelector('.part-tab[data-part="' + group.dataset.part + '"]');
+    tab.querySelector(".count").textContent = count > 0 ? count : "";
+  });
+});
+
+// ===== 하단 "응급도 판정" 버튼: 선택된 방식에 맞는 판정 실행 =====
+judgeBtn.addEventListener("click", function () {
+  if (mode === "text") {
+    judgeByText();
+  } else {
+    judgeByList();
+  }
+});
+
+// 방식 1: 직접 입력한 문장으로 AI 판정
+function judgeByText() {
   const text = textInput.value.trim();
 
   if (text === "") {
-    alert("증상을 입력해 주세요.");
+    alert("증상을 입력하십시오.");
+    textInput.focus();
     return;
   }
 
-  runAnalysis(text + getPatientInfo(), analyzeBtn);
-});
+  runAnalysis(text + getPatientInfo(), judgeBtn);
+}
+
+// 방식 2: 부위별 선택 목록으로 규칙 판정
+function judgeByList() {
+  // .group 안의 체크박스만 세기 (추가 질문 체크박스는 제외)
+  const checked = document.querySelectorAll('.group input[type="checkbox"]:checked');
+
+  if (checked.length === 0) {
+    alert("증상을 하나 이상 선택하십시오.");
+    return;
+  }
+
+  let hasRed = false;
+  let hasYellow = false;
+
+  checked.forEach(function (box) {
+    if (box.value === "red") {
+      hasRed = true;
+    }
+    if (box.value === "yellow") {
+      hasYellow = true;
+    }
+  });
+
+  if (hasRed) {
+    showResult("red", "선택한 항목 중 위험 신호가 있습니다.");
+  } else if (hasYellow) {
+    showResult("yellow", "선택한 항목 중 주의 증상이 있습니다.");
+  } else {
+    showResult("green", "일반 증상만 선택했습니다.");
+  }
+}
 
 // ===== 추가 질문에 답하고 다시 판정 =====
 function followUp() {
@@ -117,39 +215,6 @@ function followUp() {
   runAnalysis(combined, document.getElementById("follow-btn"));
 }
 
-// ===== 방법 2: 체크리스트로 판정 =====
-const checkBtn = document.getElementById("check-btn");
-
-checkBtn.addEventListener("click", function () {
-  // .group 안의 체크박스만 세기 (추가 질문 체크박스는 제외)
-  const checked = document.querySelectorAll('.group input[type="checkbox"]:checked');
-
-  if (checked.length === 0) {
-    alert("증상을 하나 이상 선택해 주세요.");
-    return;
-  }
-
-  let hasRed = false;
-  let hasYellow = false;
-
-  checked.forEach(function (box) {
-    if (box.value === "red") {
-      hasRed = true;
-    }
-    if (box.value === "yellow") {
-      hasYellow = true;
-    }
-  });
-
-  if (hasRed) {
-    showResult("red", "체크한 항목 중 위험 신호가 있습니다.");
-  } else if (hasYellow) {
-    showResult("yellow", "체크한 항목 중 주의 증상이 있습니다.");
-  } else {
-    showResult("green", "일반 증상만 체크했습니다.");
-  }
-});
-
 // ===== 환자 정보를 글로 정리하기 =====
 function getPatientInfo() {
   const age = document.getElementById("age-group").value;
@@ -175,10 +240,12 @@ function getPatientInfo() {
 
 // ===== 큰 글씨 모드 =====
 const fontToggle = document.getElementById("font-toggle");
+const fontToggleLabel = document.getElementById("font-toggle-label");
 
 function applyLargeText(on) {
-  document.body.classList.toggle("large-text", on);
-  fontToggle.textContent = on ? "기본 글씨로 보기" : "큰 글씨로 보기";
+  // html 글자 크기를 키우면 rem으로 쓴 모든 글자와 여백이 함께 커져요
+  document.documentElement.classList.toggle("large-text", on);
+  fontToggleLabel.textContent = on ? "기본 글씨" : "글씨 크게";
 }
 
 // 지난번에 큰 글씨를 켰는지 브라우저 메모장에서 꺼내 보기
@@ -191,7 +258,7 @@ try {
 applyLargeText(savedLarge);
 
 fontToggle.addEventListener("click", function () {
-  const on = !document.body.classList.contains("large-text");
+  const on = !document.documentElement.classList.contains("large-text");
   applyLargeText(on);
   try {
     localStorage.setItem("largeText", on ? "on" : "off");

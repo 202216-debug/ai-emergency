@@ -1,301 +1,632 @@
-body {
-  font-family: "Malgun Gothic", sans-serif;
-  background-color: #f4f6f9;
-  margin: 0;
-  padding: 20px;
+/* ===============================================
+   응급 판단 도우미 스타일
+   글자 크기와 여백은 rem 단위로 써요.
+   큰 글씨 모드에서는 html 글자 크기만 키우면 전체가 함께 커져요.
+   =============================================== */
+
+:root {
+  --navy-900: #0e2258;
+  --navy: #1a3a8f;
+  --navy-soft: #dce5fa;
+  --navy-tint: #eef3ff;
+  --coral: #f26b4f;
+  --ecg: #f58c73;
+  --ink: #191f28;
+  --gray-700: #4e5968;
+  --gray-500: #6b7684;
+  --gray-400: #8b95a1;
+  --gray-300: #b0b8c1;
+  --line: #eef0f3;
+  --border: #d1d6db;
+  --surface: #f2f4f6;
+  --red: #d92d20;
 }
 
-.container {
-  max-width: 400px;
+html.large-text { font-size: 125%; }
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Pretendard", "Malgun Gothic", sans-serif;
+  color: var(--ink);
+  background-color: var(--surface);
+  word-break: keep-all;
+  -webkit-text-size-adjust: 100%;
+}
+
+.app {
+  max-width: 480px;
+  min-height: 100vh;
   margin: 0 auto;
   background-color: white;
-  padding: 24px;
-  border-radius: 12px;
+  padding-bottom: 6.5rem; /* 하단 고정 버튼에 가려지지 않게 */
 }
 
-.notice {
-  background-color: #fff4e5;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 14px;
-}
+button { font-family: inherit; }
 
-.group {
-  border-left: 6px solid #c5d3ee;
-  padding: 8px 16px;
-  margin: 16px 0;
-}
-
-.part-head  { border-left-color: #b39ddb; }
-.part-chest { border-left-color: #81d4fa; }
-.part-belly { border-left-color: #ffcc80; }
-.part-limb  { border-left-color: #80cbc4; }
-.part-body  { border-left-color: #f8bbd0; }
-
-.group label {
-  display: block;
-  padding: 6px 0;
-  cursor: pointer;
-}
-
-#check-btn, #analyze-btn {
-  width: 100%;
-  padding: 14px;
-  font-size: 18px;
-  background-color: #1a3a8f;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-#check-btn:hover, #analyze-btn:hover {
-  background-color: #0f2766;
-}
-
-.result {
-  text-align: center;
-  word-break: keep-all;
-  margin-top: 20px;
-  padding: 16px;
-  border-radius: 10px;
-}
-
-.result-red    { background-color: #fdecea; border: 2px solid #e53935; }
-.result-yellow { background-color: #fff8e1; border: 2px solid #fbc02d; }
-.result-green  { background-color: #e8f5e9; border: 2px solid #43a047; }
-
-.action-btn {
-  display: block;
-  text-align: center;
-  padding: 10px;
-  font-size: 25px;
-  margin-top: 12px;
-  background-color: #333;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: bold;
-}
-
-.btn-sub {
-  display: block;
-  margin-top: 6px;
-  text-align: center;
-  font-size: 10px;
-  color: #f1d6d6;
-  font-weight: normal;
-  opacity: 0.85;
-}
-.result-red .action-btn { background-color: #e53935; }
-.result-green .action-btn { background-color: #43a047; }
-.result-green .action-btn-sub {
-  background-color: white;
-  color: #2e7d32;
-  border: 2px solid #43a047;
-}
-#symptom-text {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 12px;
-  font-size: 16px;
-  font-family: inherit;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  margin-bottom: 8px;
-}
-
-#analyze-btn:disabled {
-  background-color: #999;
-  cursor: wait;
-}
-
-.divider {
-  text-align: center;
-  color: #888;
-  font-size: 14px;
-  margin: 24px 0 8px;
-}
-
-.reason {
-  font-size: 13px;
-  color: #666;
-  margin-top: 12px;
-}
-
-.result-unknown { background-color: #f0f0f0; border: 2px solid #999; }
-
-.sub-guide {
-  text-align: center;
-  font-size: 14px;
-  color: #555;
-  margin-top: 0;
-}
-
-.source {
-  font-size: 12px;
-  color: #999;
-  text-align: center;
-  margin-top: 24px;
-}
-
-.follow-up {
-  margin-top: 12px;
-}
-
-.follow-up label {
+/* ===== 서비스 이름 띠 ===== */
+.brand-bar {
   display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  text-align: left;
-  padding: 6px 0;
-  cursor: pointer;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.875rem 1.25rem;
+  background-color: var(--navy-900);
 }
 
-.follow-up input[type="checkbox"] {
-  margin-top: 4px;
-  flex-shrink: 0;
-}
-
-#follow-text {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px;
-  font-size: 16px;
-  font-family: inherit;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  margin: 8px 0;
-}
-
-#follow-btn {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  background-color: #1a3a8f;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
 }
 
-#follow-btn:disabled {
-  background-color: #999;
-  cursor: wait;
+.brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.625rem;
+  height: 1.625rem;
+  border-radius: 50%;
+  background-color: var(--coral);
+  color: white;
 }
 
-/* ===== 큰 글씨 모드 버튼 ===== */
 .font-toggle {
-  display: block;
-  margin: 0 0 8px auto;
-  padding: 8px 14px;
-  font-size: 16px;
-  font-weight: bold;
-  font-family: inherit;
-  color: #1a3a8f;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--navy-900);
   background-color: white;
-  border: 2px solid #1a3a8f;
-  border-radius: 20px;
+  border: none;
+  border-radius: 0.5rem;
   cursor: pointer;
 }
 
-/* ===== 큰 글씨 모드가 켜졌을 때 ===== */
-body.large-text { font-size: 20px; color: #111; }
-body.large-text h1 { font-size: 34px; }
-body.large-text h2 { font-size: 26px; }
-body.large-text .font-toggle { background-color: #1a3a8f; color: white; }
-body.large-text .notice,
-body.large-text .divider,
-body.large-text .sub-guide { font-size: 18px; }
-body.large-text .reason,
-body.large-text .follow-label,
-body.large-text .follow-hint,
-body.large-text .btn-sub { font-size: 16px; }
-body.large-text #symptom-text,
-body.large-text #follow-text { font-size: 20px; }
-body.large-text #analyze-btn,
-body.large-text #check-btn,
-body.large-text #follow-btn { font-size: 22px; padding: 18px; }
-body.large-text input[type="checkbox"] { width: 24px; height: 24px; }
-body.large-text .group label { padding: 10px 0; line-height: 1.5; }
+html.large-text .font-toggle {
+  color: white;
+  background-color: var(--coral);
+}
 
-/* ===== 환자 정보 ===== */
+/* ===== 안내 영역 ===== */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem 1.25rem 1.625rem;
+  background-color: var(--navy);
+}
+
+.hero-ecg {
+  position: absolute;
+  right: -0.625rem;
+  top: 0.5rem;
+  width: 12.5rem;
+  height: 3.75rem;
+  color: var(--ecg);
+  stroke-dasharray: 320;
+  stroke-dashoffset: 320;
+  animation: ecg-draw 1.6s ease-out 0.3s forwards;
+}
+
+@keyframes ecg-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-ecg { animation: none; stroke-dashoffset: 0; }
+}
+
+.hero-text {
+  position: relative;
+  margin: 0;
+  font-size: 1.3125rem;
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+  color: var(--navy-soft);
+}
+
+.hero-text strong {
+  font-weight: 700;
+  color: white;
+}
+
+/* ===== 참고용 안내 띠 ===== */
+.notice {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin: 0;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #8a4b00;
+  background-color: #fff4e5;
+}
+
+.notice svg { flex-shrink: 0; margin-top: 0.1rem; }
+
+/* ===== 단계 공통 ===== */
+.content { padding: 0 1.25rem; }
+
+.step { padding-top: 1.5rem; }
+
+.step-title {
+  margin: 0 0 0.625rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.step-num {
+  margin-right: 0.4rem;
+  color: var(--navy);
+}
+
+.step-optional {
+  font-weight: 400;
+  color: var(--gray-400);
+}
+
+/* ===== 01 환자 정보 ===== */
 .patient-info {
-  margin: 16px 0;
-  padding: 12px 16px;
-  background-color: #f7f9fc;
-  border: 1px solid #d6def0;
-  border-radius: 10px;
+  border: 1px solid #e5e8eb;
+  border-radius: 0.625rem;
 }
 
 .patient-info summary {
-  font-weight: bold;
-  color: #1a3a8f;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0.875rem;
+  font-size: 0.875rem;
+  color: var(--gray-500);
   cursor: pointer;
+  list-style: none;
+}
+
+.patient-info summary::-webkit-details-marker { display: none; }
+
+.patient-info summary::after {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.25rem;
+  border-right: 2px solid var(--gray-400);
+  border-bottom: 2px solid var(--gray-400);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 0.2s;
+}
+
+.patient-info[open] summary::after { transform: rotate(-135deg) translateY(-2px); }
+
+.patient-info[open] summary { color: var(--navy); font-weight: 600; }
+
+.patient-body {
+  padding: 0 0.875rem 1rem;
+  border-top: 1px solid var(--line);
 }
 
 .patient-guide {
-  font-size: 13px;
-  color: #666;
-  margin: 8px 0 4px;
+  margin: 0.75rem 0 0;
+  font-size: 0.75rem;
+  color: var(--gray-500);
 }
 
 .field-label {
   display: block;
-  font-size: 14px;
-  font-weight: bold;
-  margin: 12px 0 6px;
+  margin: 1rem 0 0.4rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
 }
+
+.field-note { font-weight: 400; color: var(--gray-400); }
 
 #age-group {
   width: 100%;
-  padding: 10px;
-  font-size: 16px;
+  padding: 0.625rem;
+  font-size: 1rem;
   font-family: inherit;
+  color: var(--ink);
   background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
 }
 
 .condition-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 0.4rem;
 }
 
 .condition-list label {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  font-size: 14px;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 20px;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--gray-700);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
   cursor: pointer;
 }
 
+.condition-list input { accent-color: var(--navy); margin: 0; }
+
 .condition-list label:has(input:checked) {
-  border-color: #1a3a8f;
-  background-color: #eef3ff;
-  font-weight: bold;
+  color: var(--navy);
+  font-weight: 600;
+  background-color: var(--navy-tint);
+  border-color: var(--navy);
 }
 
-/* 큰 글씨 모드에서 환자 정보도 크게 */
-body.large-text .patient-guide { font-size: 16px; }
-body.large-text .field-label { font-size: 18px; }
-body.large-text #age-group { font-size: 20px; }
-body.large-text .condition-list label { font-size: 18px; }
+/* ===== 02 증상 알리기: 방식 전환 ===== */
+.mode-switch {
+  display: flex;
+  padding: 0.2rem;
+  background-color: var(--surface);
+  border-radius: 0.625rem;
+}
 
-@media (max-width: 600px) {
-  body {
-    padding: 0;
-  }
+.mode-btn {
+  flex: 1;
+  padding: 0.55rem 0;
+  font-size: 0.875rem;
+  color: var(--gray-500);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
 
-  .container {
-    border-radius: 0;
-    min-height: 100vh;
-    padding: 20px 16px;
+.mode-btn.is-active {
+  font-weight: 700;
+  color: var(--navy);
+  background-color: white;
+  border-color: #d5ddf0;
+}
+
+.mode-guide {
+  margin: 0.75rem 0.125rem 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--gray-500);
+}
+
+#symptom-text {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 0.875rem;
+  font-size: 1rem;
+  font-family: inherit;
+  line-height: 1.5;
+  color: var(--ink);
+  background-color: #f7f9fd;
+  border: 1px solid #c5cfe8;
+  border-radius: 0.625rem;
+  resize: vertical;
+}
+
+#symptom-text:focus {
+  outline: none;
+  border-color: var(--navy);
+  background-color: white;
+}
+
+#symptom-text::placeholder { color: var(--gray-400); }
+
+.example {
+  margin: 0.4rem 0.125rem 0;
+  font-size: 0.75rem;
+  color: var(--gray-400);
+}
+
+/* ===== 부위별 선택 ===== */
+.part-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.25rem;
+}
+
+.part-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.8125rem;
+  color: var(--gray-700);
+  background-color: white;
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  cursor: pointer;
+}
+
+.part-tab.is-active {
+  color: white;
+  background-color: var(--navy);
+  border-color: var(--navy);
+}
+
+.dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+}
+
+.dot-head  { background-color: #9c7fd6; }
+.dot-chest { background-color: #81d4fa; }
+.dot-belly { background-color: #f2a93b; }
+.dot-limb  { background-color: #4db6ac; }
+.dot-body  { background-color: #e991b1; }
+
+/* 부위마다 고른 개수 표시 */
+.count:not(:empty) {
+  min-width: 1.1rem;
+  padding: 0 0.3rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.1rem;
+  text-align: center;
+  color: white;
+  background-color: var(--coral);
+  border-radius: 0.6rem;
+}
+
+.group label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.8rem 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.group label:last-child { border-bottom: none; }
+
+.group input[type="checkbox"],
+.follow-up input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0.1rem 0 0;
+  accent-color: var(--navy);
+}
+
+.group label:has(input:checked) { font-weight: 600; }
+
+/* ===== 판정 결과 ===== */
+.result {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid;
+  border-radius: 0.875rem;
+  animation: result-in 0.35s ease-out;
+}
+
+@keyframes result-in {
+  from { opacity: 0; transform: translateY(0.5rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.result-badge {
+  display: inline-block;
+  margin: 0 0 0.5rem;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  border-radius: 0.3rem;
+}
+
+.result h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.result-desc {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--gray-700);
+}
+
+.result-red     { background-color: #fef1f0; border-color: #f4b8b2; }
+.result-yellow  { background-color: #fff8e6; border-color: #f5d48a; }
+.result-green   { background-color: #eef8f0; border-color: #a9d8b2; }
+.result-unknown { background-color: var(--navy-tint); border-color: #b9c9ee; }
+
+.result-red .result-badge     { background-color: var(--red); }
+.result-yellow .result-badge  { background-color: #c98500; }
+.result-green .result-badge   { background-color: #2e8540; }
+.result-unknown .result-badge { background-color: var(--navy); }
+
+.result-red h3     { color: #b42318; }
+.result-yellow h3  { color: #8a5a00; }
+.result-green h3   { color: #1e6b30; }
+.result-unknown h3 { color: var(--navy); }
+
+.action-btn {
+  display: block;
+  margin-top: 0.875rem;
+  padding: 0.85rem;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  color: white;
+  border-radius: 0.625rem;
+}
+
+.result-red .action-btn    { background-color: var(--red); }
+.result-yellow .action-btn { background-color: #c98500; }
+.result-green .action-btn  { background-color: #2e8540; }
+
+.result-green .action-btn-sub {
+  margin-top: 0.5rem;
+  color: #1e6b30;
+  background-color: white;
+  border: 1px solid #a9d8b2;
+}
+
+.btn-sub {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.reason {
+  margin: 0.875rem 0 0;
+  padding-top: 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--gray-500);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* ===== 추가 질문 ===== */
+.follow-up {
+  margin-top: 0.875rem;
+  padding: 0.875rem;
+  background-color: white;
+  border: 1px solid #d5ddf0;
+  border-radius: 0.75rem;
+}
+
+.follow-label {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.follow-up label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-bottom: 0.4rem;
+  padding: 0.7rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border: 1px solid #e5e8eb;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.follow-up label:has(input:checked) {
+  font-weight: 600;
+  color: var(--navy);
+  background-color: var(--navy-tint);
+  border-color: var(--navy);
+}
+
+#follow-text {
+  display: block;
+  width: 100%;
+  margin: 0.25rem 0 0.5rem;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+}
+
+#follow-btn,
+.link-btn {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: white;
+  background-color: var(--navy);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.link-btn { margin-top: 0.875rem; }
+
+#follow-btn:disabled { background-color: var(--gray-300); cursor: wait; }
+
+.follow-hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.75rem;
+  text-align: center;
+  color: var(--gray-400);
+}
+
+/* ===== 푸터 ===== */
+.footer {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--gray-400);
+  border-top: 1px solid var(--line);
+}
+
+.footer p { margin: 0; }
+
+/* ===== 하단 고정 버튼 ===== */
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 480px;
+  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+  background-color: white;
+  border-top: 1px solid var(--line);
+}
+
+.call-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  width: 6rem;
+  height: 3.25rem;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: white;
+  background-color: var(--red);
+  border-radius: 0.625rem;
+}
+
+.judge-btn {
+  flex: 1;
+  height: 3.25rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: white;
+  background-color: var(--navy);
+  border: none;
+  border-radius: 0.625rem;
+  cursor: pointer;
+}
+
+.judge-btn:hover { background-color: var(--navy-900); }
+
+.judge-btn:disabled { background-color: var(--gray-300); cursor: wait; }
+
+/* ===== 넓은 화면 (컴퓨터) ===== */
+@media (min-width: 481px) {
+  .app {
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
   }
 }

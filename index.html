@@ -3,97 +3,162 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-  <title>응급 증상 체크</title>
-    <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>응급 판단 도우미</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div class="container">
-   <button id="font-toggle" class="font-toggle">큰 글씨로 보기</button>
-    <h1>지금 응급실에 가야 할까요?</h1>
-    <p class="notice">⚠️ 이 결과는 참고용입니다. 생명이 위험하다고 느껴지면 바로 <b>119</b>에 전화하세요.</p>
-    <details class="patient-info">
-      <summary>👤 환자 정보 입력하기 (선택)</summary>
-      <p class="patient-guide">알려 주시면 더 정확하게 판단할 수 있어요. 입력한 정보는 저장되지 않아요.</p>
+  <div class="app">
 
-      <label class="field-label" for="age-group">나이</label>
-      <select id="age-group">
-        <option value="">선택 안 함</option>
-        <option value="1세 미만 아기">1세 미만 아기</option>
-        <option value="1~6세 어린이">1~6세 어린이</option>
-        <option value="7~18세 어린이·청소년">7~18세 어린이·청소년</option>
-        <option value="19~64세 성인">19~64세 성인</option>
-        <option value="65세 이상">65세 이상</option>
-      </select>
-
-      <p class="field-label">앓고 있는 병이나 상태 (해당하는 것 모두)</p>
-      <div class="condition-list">
-        <label><input type="checkbox" class="condition"> 심장질환</label>
-        <label><input type="checkbox" class="condition"> 고혈압</label>
-        <label><input type="checkbox" class="condition"> 당뇨</label>
-        <label><input type="checkbox" class="condition"> 뇌졸중을 겪은 적 있음</label>
-        <label><input type="checkbox" class="condition"> 천식·폐질환</label>
-        <label><input type="checkbox" class="condition"> 피를 묽게 하는 약 복용</label>
-        <label><input type="checkbox" class="condition"> 임신 중</label>
+    <!-- 서비스 이름 띠 -->
+    <header class="brand-bar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M3 12h4l2-5 3 10 2-5h7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        응급 판단 도우미
       </div>
-    </details>
+      <button id="font-toggle" class="font-toggle" type="button">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M3 7V5h13v2M9.5 5v14M7.5 19h4M14 13v-1h7v1M17.5 12v7M16 19h3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span id="font-toggle-label">글씨 크게</span>
+      </button>
+    </header>
 
-    <section class="text-input">
-    <h2> 증상을 직접 적어 주세요</h2>
-    <textarea id="symptom-text" rows="4" placeholder="예: 30분 전부터 가슴이 답답하고 식은땀이 나요"></textarea>
-    <button id="analyze-btn">판정하기</button>
+    <!-- 안내 영역 -->
+    <section class="hero">
+      <svg class="hero-ecg" viewBox="0 0 200 60" aria-hidden="true">
+        <path d="M0 34 H70 L82 34 L90 18 L98 48 L108 6 L120 54 L128 34 L142 34 L148 28 L154 34 H200" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      </svg>
+      <p class="hero-text">증상을 입력하면<br><strong>응급 수준</strong>을 안내합니다</p>
     </section>
 
-        <p class="divider">─ 또는 불편한 부위에서 해당하는 증상을 골라 주세요 ─</p>
-    <p class="sub-guide">본인 또는 옆에 있는 사람의 증상을 모두 골라 주세요.</p>
+    <p class="notice">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 9v4M12 16h.01M10.36 3.59 2.26 17.13A1.9 1.9 0 0 0 3.9 20h16.2a1.9 1.9 0 0 0 1.64-2.87L13.64 3.59a1.9 1.9 0 0 0-3.28 0Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>판정 결과는 참고용입니다. 생명이 위급한 경우 즉시 119에 신고하십시오.</span>
+    </p>
 
-    <section class="group part-head">
-      <h2> 머리 · 눈</h2>
-      <label><input type="checkbox" value="red"> 갑자기 얼굴이나 팔다리 한쪽에 힘이 빠지거나, 말이 어눌해졌어요</label>
-      <label><input type="checkbox" value="red"> 머리를 부딪힌 뒤 토하거나 정신이 멍해요</label>
-      <label><input type="checkbox" value="yellow"> 갑자기 눈이 잘 안 보여요</label>
-      <label><input type="checkbox" value="yellow"> 눈에 세제, 락스 같은 약품이 들어갔어요</label>
-    </section>
+    <main class="content">
 
-    <section class="group part-chest">
-      <h2> 가슴 · 숨</h2>
-      <label><input type="checkbox" value="red"> 숨이 너무 차서 말을 끝까지 잇기 힘들어요</label>
-      <label><input type="checkbox" value="red"> 음식이나 약을 먹은 뒤 입술과 얼굴이 붓고 숨쉬기 힘들어요</label>
-      <label><input type="checkbox" value="green"> 콧물, 기침, 목 아픔 같은 감기 기운이 있어요</label>
-      <label><input type="checkbox" value="red"> 가슴을 쥐어짜거나 무언가 짓누르는 듯이 아파요</label>
-      <label><input type="checkbox" value="yellow"> 가만히 있는데도 심장이 갑자기 너무 빠르거나 불규칙하게 뛰어요</label>
-    </section>
+      <!-- 01 환자 정보 -->
+      <section class="step">
+        <h2 class="step-title"><span class="step-num">01</span>환자 정보 <span class="step-optional">(선택)</span></h2>
+        <details class="patient-info">
+          <summary>연령대 · 기저질환 입력</summary>
+          <div class="patient-body">
+            <p class="patient-guide">입력한 정보는 판정에만 사용되며 저장되지 않습니다.</p>
 
-    <section class="group part-belly">
-      <h2> 배</h2>
-      <label><input type="checkbox" value="yellow"> 배가 너무 아파서 몸을 펴거나 움직이기 힘들어요</label>
-      <label><input type="checkbox" value="green"> 배탈이나 설사가 조금 있지만 물은 잘 마셔요</label>
-      <label><input type="checkbox" value="yellow"> 피를 토하거나, 피 섞인 변 또는 까만 변을 봐요</label>
-      <label><input type="checkbox" value="yellow"> 계속 토하거나 설사해서 물도 못 마시고, 소변이 거의 안 나와요</label>
-    </section>
+            <label class="field-label" for="age-group">연령대</label>
+            <select id="age-group">
+              <option value="">선택 안 함</option>
+              <option value="1세 미만 영아">1세 미만</option>
+              <option value="1~6세 어린이">1~6세</option>
+              <option value="7~18세 어린이·청소년">7~18세</option>
+              <option value="19~64세 성인">19~64세</option>
+              <option value="65세 이상">65세 이상</option>
+            </select>
 
-    <section class="group part-limb">
-      <h2> 팔다리 · 피부 (다쳤을 때)</h2>
-      <label><input type="checkbox" value="green"> 살짝 베이거나 멍이 들었어요</label>
-      <label><input type="checkbox" value="red"> 피 나는 곳을 꾹 눌러도 피가 멈추지 않아요</label>
-      <label><input type="checkbox" value="yellow"> 뼈가 부러져 튀어나왔거나, 날카로운 것에 깊이 찔렸어요</label>
-      <label><input type="checkbox" value="yellow"> 다리 한쪽에 넓게 화상을 입었어요</label>
-    </section>
+            <p class="field-label">기저질환 · 상태 <span class="field-note">(해당 항목 모두)</span></p>
+            <div class="condition-list">
+              <label><input type="checkbox" class="condition"> 심장질환</label>
+              <label><input type="checkbox" class="condition"> 고혈압</label>
+              <label><input type="checkbox" class="condition"> 당뇨</label>
+              <label><input type="checkbox" class="condition"> 뇌졸중 병력</label>
+              <label><input type="checkbox" class="condition"> 천식·폐질환</label>
+              <label><input type="checkbox" class="condition"> 항응고제(피를 묽게 하는 약) 복용</label>
+              <label><input type="checkbox" class="condition"> 임신 중</label>
+            </div>
+          </div>
+        </details>
+      </section>
 
-    <section class="group part-body">
-      <h2> 온몸 · 마음</h2>
-      <label><input type="checkbox" value="red"> 정신을 잃었거나, 불러도 반응이 둔해요</label>
-      <label><input type="checkbox" value="red"> 몸이 뻣뻣해지면서 떨리는 경련(발작)을 해요</label>
-      <label><input type="checkbox" value="green"> 열이 나지만 물을 잘 마시고 평소처럼 움직일 수 있어요</label>
-      <label><input type="checkbox" value="red"> 식은땀이 나고 얼굴이 창백하며 쓰러질 것 같아요</label>
-      <label><input type="checkbox" value="red"> 약, 술, 농약 등을 한꺼번에 많이 먹었어요</label>
-      <label><input type="checkbox" value="red"> 나 자신이나 다른 사람을 해칠 것 같은 생각이 들어요</label>
-    </section>
+      <!-- 02 증상 알리기 -->
+      <section class="step">
+        <h2 class="step-title"><span class="step-num">02</span>증상 알리기</h2>
 
-    <button id="check-btn">결과 보기</button>
-    <div id="result"></div>
-        <p class="source">증상 분류 참고: 국립중앙의료원 「응급증상 및 비응급증상 안내」</p>
+        <div class="mode-switch" role="tablist" aria-label="증상 입력 방식">
+          <button type="button" class="mode-btn is-active" data-mode="text" role="tab" aria-selected="true">직접 입력</button>
+          <button type="button" class="mode-btn" data-mode="list" role="tab" aria-selected="false">부위별 선택</button>
+        </div>
+
+        <!-- 방식 1: 직접 입력 -->
+        <div class="mode-panel" id="panel-text">
+          <p class="mode-guide">증상을 문장으로 입력</p>
+          <textarea id="symptom-text" rows="4" placeholder="언제부터, 어디가, 어떻게 아픈지 입력"></textarea>
+          <p class="example">예시) 30분 전부터 가슴이 답답하고 식은땀이 남</p>
+        </div>
+
+        <!-- 방식 2: 부위별 선택 -->
+        <div class="mode-panel" id="panel-list" hidden>
+          <p class="mode-guide">해당 증상을 목록에서 모두 선택 (여러 부위 선택 가능)</p>
+
+          <div class="part-tabs">
+            <button type="button" class="part-tab is-active" data-part="head"><span class="dot dot-head"></span>머리·눈<span class="count"></span></button>
+            <button type="button" class="part-tab" data-part="chest"><span class="dot dot-chest"></span>가슴·숨<span class="count"></span></button>
+            <button type="button" class="part-tab" data-part="belly"><span class="dot dot-belly"></span>배<span class="count"></span></button>
+            <button type="button" class="part-tab" data-part="limb"><span class="dot dot-limb"></span>팔다리·피부<span class="count"></span></button>
+            <button type="button" class="part-tab" data-part="body"><span class="dot dot-body"></span>온몸·마음<span class="count"></span></button>
+          </div>
+
+          <div class="group" data-part="head">
+            <label><input type="checkbox" value="red"><span>갑작스러운 한쪽 얼굴·팔다리 마비 또는 말 어눌함</span></label>
+            <label><input type="checkbox" value="red"><span>머리를 부딪힌 후 구토 또는 의식 흐림</span></label>
+            <label><input type="checkbox" value="yellow"><span>갑작스러운 시력 저하</span></label>
+            <label><input type="checkbox" value="yellow"><span>눈에 세제·락스 등 화학물질이 들어감</span></label>
+          </div>
+
+          <div class="group" data-part="chest" hidden>
+            <label><input type="checkbox" value="red"><span>숨이 차서 말을 잇기 어려움</span></label>
+            <label><input type="checkbox" value="red"><span>음식·약 섭취 후 입술·얼굴 부기와 호흡곤란</span></label>
+            <label><input type="checkbox" value="green"><span>콧물·기침·인후통 등 감기 증상</span></label>
+            <label><input type="checkbox" value="red"><span>가슴을 쥐어짜거나 짓누르는 듯한 통증</span></label>
+            <label><input type="checkbox" value="yellow"><span>안정 시에도 갑자기 빠르거나 불규칙한 심장 박동</span></label>
+          </div>
+
+          <div class="group" data-part="belly" hidden>
+            <label><input type="checkbox" value="yellow"><span>몸을 펴거나 움직이기 어려울 정도의 복통</span></label>
+            <label><input type="checkbox" value="green"><span>가벼운 배탈·설사 (물 섭취 가능)</span></label>
+            <label><input type="checkbox" value="yellow"><span>피를 토함 또는 피 섞인 변·검은 변</span></label>
+            <label><input type="checkbox" value="yellow"><span>계속되는 구토·설사로 물을 못 마시고 소변이 거의 없음</span></label>
+          </div>
+
+          <div class="group" data-part="limb" hidden>
+            <label><input type="checkbox" value="green"><span>가벼운 베임 또는 멍</span></label>
+            <label><input type="checkbox" value="red"><span>눌러도 멈추지 않는 출혈</span></label>
+            <label><input type="checkbox" value="yellow"><span>뼈가 튀어나온 골절 또는 깊이 찔린 상처</span></label>
+            <label><input type="checkbox" value="yellow"><span>다리 한쪽 정도 넓이의 화상</span></label>
+          </div>
+
+          <div class="group" data-part="body" hidden>
+            <label><input type="checkbox" value="red"><span>의식을 잃음 또는 불러도 반응이 둔함</span></label>
+            <label><input type="checkbox" value="red"><span>몸이 뻣뻣해지며 떨리는 경련(발작)</span></label>
+            <label><input type="checkbox" value="green"><span>발열이 있으나 물 섭취와 평소 활동 가능</span></label>
+            <label><input type="checkbox" value="red"><span>식은땀·창백함과 함께 쓰러질 것 같은 느낌</span></label>
+            <label><input type="checkbox" value="red"><span>약·술·농약 등을 한꺼번에 많이 섭취</span></label>
+            <label><input type="checkbox" value="red"><span>자신이나 타인을 해칠 것 같은 생각</span></label>
+          </div>
+        </div>
+      </section>
+
+      <!-- 판정 결과 -->
+      <div id="result" aria-live="polite"></div>
+    </main>
+
+    <footer class="footer">
+      <p>증상 분류 참고: 국립중앙의료원 「응급증상 및 비응급증상 안내」</p>
+      <p>본 서비스는 의료진의 진단을 대신하지 않습니다.</p>
+    </footer>
+
+    <!-- 하단 고정 버튼 -->
+    <div class="action-bar">
+      <a class="call-btn" href="tel:119">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        119
+      </a>
+      <button id="judge-btn" class="judge-btn" type="button">응급도 판정</button>
+    </div>
+
   </div>
   <script src="analyzer.js"></script>
   <script src="script.js"></script>
