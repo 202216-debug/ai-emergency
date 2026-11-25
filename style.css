@@ -87,7 +87,12 @@ body {
   opacity: 0.85;
 }
 .result-red .action-btn { background-color: #e53935; }
-
+.result-green .action-btn { background-color: #43a047; }
+.result-green .action-btn-sub {
+  background-color: white;
+  color: #2e7d32;
+  border: 2px solid #43a047;
+}
 #symptom-text {
   display: block;
   width: 100%;

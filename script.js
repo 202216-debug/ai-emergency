@@ -17,12 +17,13 @@ function showResult(level, reason, options) {
       "<p>빠른 진료가 필요할 수 있습니다. 가까운 응급실을 확인하세요.</p>" +
       '<a class="action-btn" href="https://www.e-gen.or.kr/egen/search_emergency_room.do" target="_blank"> 가까운 응급실 찾기' +
       '<span class="btn-sub">중앙응급의료센터 사이트가 새 창으로 열립니다. "내 현위치로 이동"을 누르면 가까운 응급실이 떠요.</span></a>';
-  } else if (level === "green") {
+    } else if (level === "green") {
     html =
-      "<h2> 비대면 진료를 권장합니다</h2>" +
-      "<p>응급실보다는 야간·휴일 비대면 진료나 다음 날 외래 진료가 적합해 보입니다.</p>" +
-      '<a class="action-btn" href="#"> 비대면 진료 연결하기' +
-      '<span class="btn-sub">데모 버튼입니다.</span></a>';
+      "<h2> 응급실보다는 일반 진료를 권장합니다</h2>" +
+      "<p>지금 문을 연 동네 병원이나 비대면 진료로 충분해 보입니다. 증상이 심해지면 다시 판정하거나 119에 전화하세요.</p>" +
+      '<a class="action-btn" href="https://www.e-gen.or.kr/egen/search_hospital.do" target="_blank"> 지금 문 연 병원 찾기' +
+      '<span class="btn-sub">중앙응급의료센터 사이트가 새 창으로 열립니다.</span></a>' +
+      '<a class="action-btn action-btn-sub" href="https://www.e-gen.or.kr/egen/search_pharmacy.do" target="_blank"> 문 연 약국 찾기</a>';
   } else {
     html = "<h2> 증상을 판단하기 어려워요</h2>";
 
@@ -177,7 +178,7 @@ const fontToggle = document.getElementById("font-toggle");
 
 function applyLargeText(on) {
   document.body.classList.toggle("large-text", on);
-  fontToggle.textContent = on ? "가 기본 글씨로" : "가 큰 글씨로";
+  fontToggle.textContent = on ? "기본 글씨로 보기" : "큰 글씨로 보기";
 }
 
 // 지난번에 큰 글씨를 켰는지 브라우저 메모장에서 꺼내 보기
