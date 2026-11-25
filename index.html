@@ -106,6 +106,7 @@
             <label><input type="checkbox" value="red"><span>머리를 부딪힌 후 구토 또는 의식 흐림</span></label>
             <label><input type="checkbox" value="yellow"><span>갑작스러운 시력 저하</span></label>
             <label><input type="checkbox" value="yellow"><span>눈에 세제·락스 등 화학물질이 들어감</span></label>
+            <label><input type="checkbox" value="green"><span>평소와 비슷한 가벼운 두통</span></label>
           </div>
 
           <div class="group" data-part="chest" hidden>
@@ -124,10 +125,18 @@
           </div>
 
           <div class="group" data-part="limb" hidden>
+            <p class="group-sub">다침</p>
             <label><input type="checkbox" value="green"><span>가벼운 베임 또는 멍</span></label>
-            <label><input type="checkbox" value="red"><span>눌러도 멈추지 않는 출혈</span></label>
+            <label><input type="checkbox" value="green"><span>삔 것 같은 붓기와 통증 (걸을 수 있음)</span></label>
+            <label><input type="checkbox" value="yellow"><span>심하게 붓고 움직이거나 체중을 싣기 어려움</span></label>
             <label><input type="checkbox" value="yellow"><span>뼈가 튀어나온 골절 또는 깊이 찔린 상처</span></label>
-            <label><input type="checkbox" value="yellow"><span>다리 한쪽 정도 넓이의 화상</span></label>
+            <label><input type="checkbox" value="red"><span>눌러도 멈추지 않는 출혈</span></label>
+            <p class="group-sub">화상</p>
+            <label><input type="checkbox" value="green"><span>피부가 붉고 따가운 작은 화상 (1도)</span></label>
+            <label><input type="checkbox" value="yellow"><span>물집이 생긴 화상 (2도)</span></label>
+            <label><input type="checkbox" value="yellow"><span>피부가 하얗거나 검게 변하고 감각이 둔한 화상 (3도)</span></label>
+            <label><input type="checkbox" value="yellow"><span>손·발·생식기 화상 또는 다리 한쪽 정도로 넓은 화상</span></label>
+            <label><input type="checkbox" value="red"><span>얼굴·목 화상 또는 연기를 마신 뒤 숨쉬기 불편함</span></label>
           </div>
 
           <div class="group" data-part="body" hidden>
@@ -137,6 +146,18 @@
             <label><input type="checkbox" value="red"><span>식은땀·창백함과 함께 쓰러질 것 같은 느낌</span></label>
             <label><input type="checkbox" value="red"><span>약·술·농약 등을 한꺼번에 많이 섭취</span></label>
             <label><input type="checkbox" value="red"><span>자신이나 타인을 해칠 것 같은 생각</span></label>
+          </div>
+        </div>
+
+        <!-- 통증 정도 (두 방식 공통) -->
+        <div class="pain">
+          <p class="pain-title">통증 정도 <span class="step-optional">(선택)</span></p>
+          <div class="pain-scale" role="radiogroup" aria-label="통증 정도">
+            <button type="button" class="pain-btn" data-pain="없음 (0/10)" role="radio" aria-checked="false">없음<span>0</span></button>
+            <button type="button" class="pain-btn" data-pain="약함 (1~3/10)" role="radio" aria-checked="false">약함<span>1~3</span></button>
+            <button type="button" class="pain-btn" data-pain="중간 (4~6/10)" role="radio" aria-checked="false">중간<span>4~6</span></button>
+            <button type="button" class="pain-btn" data-pain="심함 (7~8/10)" role="radio" aria-checked="false">심함<span>7~8</span></button>
+            <button type="button" class="pain-btn" data-pain="극심함 (9~10/10)" data-severe="true" role="radio" aria-checked="false">극심함<span>9~10</span></button>
           </div>
         </div>
       </section>

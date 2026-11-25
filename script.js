@@ -150,7 +150,7 @@ function judgeByText() {
     return;
   }
 
-  runAnalysis(text + getPatientInfo(), judgeBtn);
+  runAnalysis(text + getPainInfo() + getPatientInfo(), judgeBtn);
 }
 
 // 방식 2: 부위별 선택 목록으로 규칙 판정
@@ -175,13 +175,39 @@ function judgeByList() {
     }
   });
 
+  // 통증이 극심하면 일반 증상만 골랐어도 응급실 진료로 한 단계 올리기
+  const severePain = selectedPain !== null && selectedPain.dataset.severe === "true";
+
   if (hasRed) {
-    showResult("red", "선택한 항목 중 위험 신호가 있습니다.");
+    showResult("red", "선택한 항목 중 위험 신호 있음");
   } else if (hasYellow) {
-    showResult("yellow", "선택한 항목 중 주의 증상이 있습니다.");
+    showResult("yellow", "선택한 항목 중 주의 증상 있음");
+  } else if (severePain) {
+    showResult("yellow", "일반 증상이나 극심한 통증 동반");
   } else {
-    showResult("green", "일반 증상만 선택했습니다.");
+    showResult("green", "일반 증상만 선택함");
   }
+}
+
+// ===== 통증 정도 선택 (한 번 더 누르면 선택 취소) =====
+let selectedPain = null;
+
+document.querySelectorAll(".pain-btn").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    selectedPain = selectedPain === btn ? null : btn;
+    document.querySelectorAll(".pain-btn").forEach(function (b) {
+      const active = b === selectedPain;
+      b.classList.toggle("is-active", active);
+      b.setAttribute("aria-checked", active ? "true" : "false");
+    });
+  });
+});
+
+function getPainInfo() {
+  if (selectedPain === null) {
+    return "";
+  }
+  return "\n\n[통증 정도]\n" + selectedPain.dataset.pain;
 }
 
 // ===== 추가 질문에 답하고 다시 판정 =====

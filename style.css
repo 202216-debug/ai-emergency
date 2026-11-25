@@ -400,6 +400,63 @@ html.large-text .font-toggle {
 
 .group label:has(input:checked) { font-weight: 600; }
 
+/* 한 부위 안의 작은 소제목 (예: 다침 / 화상) */
+.group-sub {
+  margin: 0.9rem 0 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--gray-400);
+}
+
+/* ===== 통증 정도 ===== */
+.pain {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.pain-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.pain-scale {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.3rem;
+}
+
+.pain-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.55rem 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  background-color: white;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.pain-btn span {
+  font-size: 0.6875rem;
+  font-weight: 400;
+  color: var(--gray-400);
+}
+
+/* 고른 단계: 통증이 셀수록 진한 색 */
+.pain-btn.is-active { color: white; border-color: transparent; }
+.pain-btn.is-active span { color: rgba(255, 255, 255, 0.85); }
+.pain-btn.is-active[data-pain^="없음"]   { background-color: #6b7684; }
+.pain-btn.is-active[data-pain^="약함"]   { background-color: #2e8540; }
+.pain-btn.is-active[data-pain^="중간"]   { background-color: #c98500; }
+.pain-btn.is-active[data-pain^="심함"]   { background-color: #e0641a; }
+.pain-btn.is-active[data-pain^="극심함"] { background-color: var(--red); }
+
 /* ===== 판정 결과 ===== */
 .result {
   margin-top: 1.5rem;
